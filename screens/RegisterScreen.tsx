@@ -5,13 +5,14 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "../constants/Colors";
 import { Text, View } from "../components/Themed";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const navigation = useNavigation();
 
+  const [name, onChangeName] = React.useState("");
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
 
-  const onLogin = () => {
+  const onRegister = () => {
     navigation.navigate("Home");
   };
 
@@ -19,9 +20,16 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
+        onChangeText={(text) => onChangeName(text)}
+        value={name}
+        placeholder="Digite o seu nome completo"
+      />
+
+      <TextInput
+        style={styles.input}
         onChangeText={(text) => onChangeEmail(text)}
         value={email}
-        placeholder="Email"
+        placeholder="Digite o seu email"
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -31,20 +39,12 @@ export default function LoginScreen() {
         secureTextEntry={true}
         onChangeText={(text) => onChangePassword(text)}
         value={password}
-        placeholder="Senha"
+        placeholder="Digite a sua senha"
       />
 
-      <TouchableOpacity style={styles.loginBtn} onPress={onLogin}>
-        <Text style={styles.loginText}>Entrar</Text>
+      <TouchableOpacity style={styles.registerBtn} onPress={onRegister}>
+        <Text style={styles.registerText}>Cadastrar</Text>
       </TouchableOpacity>
-
-      <Text
-        style={styles.underlineText}
-        onPress={() => navigation.navigate("Register")}
-      >
-        Ainda não possui uma conta? Clique aqui
-      </Text>
-      <Text style={styles.underlineText}>Esqueci minha senha</Text>
     </View>
   );
 }
@@ -69,11 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 10,
   },
-  underlineText: {
-    marginTop: 15,
-    textDecorationLine: "underline",
-  },
-  loginBtn: {
+  registerBtn: {
     marginTop: 15,
     height: 50,
     width: "100%",
@@ -83,7 +79,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 25,
   },
-  loginText: {
+  registerText: {
     fontSize: 18,
     fontWeight: "bold",
   },

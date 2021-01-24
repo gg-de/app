@@ -1,20 +1,31 @@
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
-import { ColorSchemeName } from 'react-native';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import * as React from "react";
+import { ColorSchemeName } from "react-native";
 
-import NotFoundScreen from '../screens/NotFoundScreen';
-import LoginScreen from '../screens/LoginScreen';
-import BottomTabNavigator from './BottomTabNavigator';
-import LinkingConfiguration from './LinkingConfiguration';
+import Colors from "../constants/Colors";
+import NotFoundScreen from "../screens/NotFoundScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import BottomTabNavigator from "./BottomTabNavigator";
+import LinkingConfiguration from "./LinkingConfiguration";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation({
+  colorScheme,
+}: {
+  colorScheme: ColorSchemeName;
+}) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+    >
       <RootNavigator />
     </NavigationContainer>
   );
@@ -26,10 +37,37 @@ const AppStack = createStackNavigator();
 
 function RootNavigator() {
   return (
-    <AppStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"Login"}>
+    <AppStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={"Login"}
+    >
       <AppStack.Screen name="Login" component={LoginScreen} />
+      <AppStack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={headerConfig("Cadastro")}
+      />
       <AppStack.Screen name="Home" component={BottomTabNavigator} />
-      <AppStack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <AppStack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{ title: "Oops!" }}
+      />
     </AppStack.Navigator>
   );
+}
+
+function headerConfig(title: string): object {
+  return {
+    title,
+    headerShown: true,
+    headerStyle: {
+      backgroundColor: Colors.darkBlue,
+    },
+    headerTintColor: "#fff",
+    headerTitleStyle: {
+      fontWeight: "bold",
+    },
+    headerTitleAlign: "center",
+  };
 }
