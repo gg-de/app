@@ -23,6 +23,7 @@ export default function RegisterScreen() {
         onChangeText={(text) => onChangeName(text)}
         value={name}
         placeholder="Digite o seu nome completo"
+        autoCapitalize="words"
       />
 
       <TextInput
