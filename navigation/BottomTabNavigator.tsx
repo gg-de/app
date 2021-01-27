@@ -5,9 +5,16 @@ import * as React from "react";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import TabOneScreen from "../screens/TabOneScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
+import SettingsScreen from "../screens/SettingsScreen";
+import CalendarScreen from "../screens/CalendarScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import {
+  BottomTabParamList,
+  CalendarParamList,
+  SettingsParamList,
+  ProfileParamList
+} from "../types";
+import headerConfig from "./index";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -16,24 +23,33 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Calendário"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
     >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="Calendário"
+        component={CalendarNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
+            <TabBarIcon name="calendar-outline" color={color} />
           ),
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="Perfil"
+        component={ProfileNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
+            <TabBarIcon name="person" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Configurações"
+        component={SettingsNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="settings-outline" color={color} />
           ),
         }}
       />
@@ -49,28 +65,41 @@ function TabBarIcon(props: { name: string; color: string }) {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const CalendarStack = createStackNavigator<CalendarParamList>();
 
-function TabOneNavigator() {
+function CalendarNavigator() {
   return (
-    <TabOneStack.Navigator screenOptions={{ headerShown: false }}>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
+    <CalendarStack.Navigator screenOptions={{ headerShown: false }}>
+      <CalendarStack.Screen
+        name="CalendarScreen"
+        component={CalendarScreen}
       />
-    </TabOneStack.Navigator>
+    </CalendarStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const SettingsStack = createStackNavigator<SettingsParamList>();
 
-function TabTwoNavigator() {
+function SettingsNavigator() {
   return (
-    <TabTwoStack.Navigator screenOptions={{ headerShown: false }}>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
+    <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
+      <SettingsStack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
       />
-    </TabTwoStack.Navigator>
+    </SettingsStack.Navigator>
+  );
+}
+
+const ProfileStack = createStackNavigator<ProfileParamList>();
+
+function ProfileNavigator() {
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfileStack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+      />
+    </ProfileStack.Navigator>
   );
 }

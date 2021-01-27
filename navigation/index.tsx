@@ -57,7 +57,7 @@ function RootNavigator() {
   );
 }
 
-function headerConfig(title: string): object {
+export function headerConfig(title: string): object {
   return {
     title,
     headerShown: true,
