@@ -8,6 +8,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import SettingsScreen from "../screens/SettingsScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import RegisterAvailabilityScreen from "../screens/RegisterAvailability";
 import {
   BottomTabParamList,
   CalendarParamList,
@@ -24,7 +25,7 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="Calendário"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      tabBarOptions={{ activeTintColor: Colors.primary }}
     >
       <BottomTab.Screen
         name="Calendário"
@@ -73,6 +74,10 @@ function CalendarNavigator() {
       <CalendarStack.Screen
         name="CalendarScreen"
         component={CalendarScreen}
+      />
+      <CalendarStack.Screen
+        name="RegisterAvailabilityScreen"
+        component={RegisterAvailabilityScreen}
       />
     </CalendarStack.Navigator>
   );

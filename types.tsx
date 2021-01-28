@@ -11,6 +11,7 @@ export type BottomTabParamList = {
 
 export type CalendarParamList = {
   CalendarScreen: undefined;
+  RegisterAvailabilityScreen: undefined;
 };
 
 export type SettingsParamList = {

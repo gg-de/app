@@ -1,77 +1,132 @@
 import * as React from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { CheckBox } from "react-native-elements";
+import Constants from 'expo-constants';
 
 import Colors from "../constants/Colors";
-import { Text, View } from "../components/Themed";
+import { Text, View, ScrollView } from "../components/Themed";
 
 export default function RegisterAvailabilityScreen() {
   const navigation = useNavigation();
+  const dayHours = {
+    _07_08: false,
+    _08_09: false,
+    _09_10: false,
+    _10_11: false,
+    _11_12: false,
+    _12_13: false,
+    _13_14: false,
+    _14_15: false,
+    _15_16: false,
+    _16_17: false,
+    _17_18: false,
+    _18_19: false,
+    _19_20: false,
+    _20_21: false,
+    _21_22: false,
+  }
 
-  const [name, onChangeName] = React.useState("");
-  const [email, onChangeEmail] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
+  const hoursList = [
+    {key: '_07_08', text: '7h às 8h'},
+    {key: '_08_09', text: '8h às 9h'},
+    {key: '_09_10', text: '9h às 10h'},
+    {key: '_10_11', text: '10h às 11h'},
+    {key: '_11_12', text: '11h às 12h'},
+    {key: '_12_13', text: '12h às 13h'},
+    {key: '_13_14', text: '13h às 14h'},
+    {key: '_14_15', text: '14h às 15h'},
+    {key: '_15_16', text: '15h às 16h'},
+    {key: '_16_17', text: '16h às 17h'},
+    {key: '_17_18', text: '17h às 18h'},
+    {key: '_18_19', text: '18h às 19h'},
+    {key: '_19_20', text: '19h às 20h'},
+    {key: '_20_21', text: '20h às 21h'},
+    {key: '_21_22', text: '21h às 22h'}
+  ]
 
-  const onRegister = () => {
-    navigation.navigate("Home");
+  const weekdaysList = [
+    {key: 'monday', text: 'Segunda-feira'},
+    {key: 'tuesday', text: 'Terça-feira'},
+    {key: 'wednesday', text: 'Quarta-feira'},
+    {key: 'thursday', text: 'Quinta-feira'},
+    {key: 'friday', text: 'Sexta-feira'},
+  ]
+
+  const [availability, onChangeAvailability] = React.useState({
+    monday: dayHours,
+    tuesday: dayHours,
+    wednesday: dayHours,
+    thursday: dayHours,
+    friday: dayHours,
+  });
+  
+  function handleChange(day: string, hourRange: string) {
+    onChangeAvailability(prevState => ({
+      ...prevState,
+      [day]: { ...prevState[day], [hourRange]: !availability[day][hourRange] }
+    }));
   };
+
+  const onFinish = () => {
+    navigation.navigate("CalendarScreen");
+  };
+
+  React.useEffect(() => {
+  }, [availability]);
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => onChangeName(text)}
-        value={name}
-        placeholder="Digite o seu nome completo"
-        autoCapitalize="words"
-      />
-
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => onChangeEmail(text)}
-        value={email}
-        placeholder="Digite o seu email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        style={styles.input}
-        secureTextEntry={true}
-        onChangeText={(text) => onChangePassword(text)}
-        value={password}
-        placeholder="Digite a sua senha"
-      />
-
-      <TouchableOpacity style={styles.registerBtn} onPress={onRegister}>
-        <Text style={styles.registerText}>Cadastrar</Text>
-      </TouchableOpacity>
+      <ScrollView style={styles.scrollContainer}>
+        <Text style={styles.title}>
+          Marque os horários ao qual tem disponibilidade para estudar
+        </Text>
+        {weekdaysList.map((weekday, key) => {
+            return (
+              <View key={key} style={styles.itemsContainer}>
+                <Text style={styles.normalText}>{weekday.text}</Text>
+                {hoursList.map((hour, key) => {
+                  return (
+                    <CheckBox
+                      key={key}
+                      title={hour.text}
+                      containerStyle={styles.checkboxContainer}
+                      textStyle={styles.checkboxText}
+                      checked={availability[weekday.key][hour.key]}
+                      onPress={() => handleChange("monday", hour.key)}
+                    />
+                  )
+                })}
+              </View>
+            )
+          })}
+        <TouchableOpacity style={styles.finishBtn} onPress={onFinish}>
+          <Text style={styles.finishText}>Finalizar</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: Constants.statusBarHeight,
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.primary,
     paddingHorizontal: "10%",
+  },
+  scrollContainer: {
+    paddingTop: '10%',
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
   },
-  input: {
-    marginVertical: 10,
-    height: 50,
-    width: "100%",
-    paddingHorizontal: 10,
-    backgroundColor: Colors.white,
-    borderRadius: 10,
+  itemsContainer: {
+    marginVertical: 15,
   },
-  registerBtn: {
+  finishBtn: {
     marginTop: 15,
+    marginBottom: '20%',
     height: 50,
     width: "100%",
     alignItems: "center",
@@ -80,8 +135,18 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 25,
   },
-  registerText: {
+  finishText: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  normalText: {
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  checkboxContainer: {
+    backgroundColor: Colors.primary,
+  },
+  checkboxText: {
+    color: Colors.white,
   },
 });
