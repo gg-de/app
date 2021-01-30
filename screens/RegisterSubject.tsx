@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,20 +7,58 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
 
+
 export default function RegisterSubjectScreen() {
   const navigation = useNavigation();
 
-  const [subjects, onChangeSubjects] = React.useState([]);
 
-  const addSubject = () => {};
+  const [subjects, onChangeSubjects] = React.useState([
+    {name: 'Matemática', hours: 2},
+    {name: 'Biologia', hours: 1},
+  ]);
+
+  const addSubject = () => {
+    addItem();
+  };
 
   const onNext = () => {
     navigation.navigate("RegisterAvailabilityScreen");
   };
 
-  return (
+  const addItem = () => {
+    let item = {name: 'teste', hours: 4}
+    subjects.push(item);
+    onChangeSubjects([...subjects]);
+  };
+
+  const removeItem = (item) => {
+    onChangeSubjects(subjects.filter((_item) => _item.name !== item.name));
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <Text style={styles.normalText}>{item.name} - {item.hours} hora(s)</Text>
+      <Ionicons
+        size={30}
+        style={styles.iconRemove}
+        name="remove-circle"
+        color={Colors.danger}
+        onPress={() => removeItem(item)}
+        />
+    </View>
+  )
+
+return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollContainer}>
+      <FlatList
+        style={{flexGrow: 0}}
+        data={subjects}
+        renderItem={renderItem}
+        extraData={subjects.length}
+        keyExtractor={(item, index) => item.name}
+        persistentScrollbar={true}
+      />
+      <View style={styles.viewContainer}>
         <TouchableOpacity
           style={styles.newSubjectContainer}
           onPress={addSubject}
@@ -35,11 +73,11 @@ export default function RegisterSubjectScreen() {
             <Text style={styles.newSubjectText}>Adicionar nova matéria</Text>
           </View>
         </TouchableOpacity>
-      </ScrollView>
-      <View style={styles.nextContainer}>
-        <TouchableOpacity style={styles.nextBtn} onPress={onNext}>
-          <Text style={styles.nextText}>Próximo</Text>
-        </TouchableOpacity>
+        <View style={styles.nextContainer}>
+          <TouchableOpacity style={styles.nextBtn} onPress={onNext}>
+            <Text style={styles.nextText}>Próximo</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -50,26 +88,26 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     flex: 1,
     paddingHorizontal: "10%",
+    paddingBottom: 20
   },
-  scrollContainer: {
+  viewContainer: {
     paddingTop: "10%",
   },
   nextContainer: {
-    position: "absolute",
-    bottom: 0,
-    alignSelf: "flex-end",
-    width: "60%",
+    width: "100%",
+    backgroundColor: 'transparent'
   },
   nextBtn: {
-    marginTop: 15,
-    marginBottom: "20%",
+    marginTop: 25,
+    marginBottom: 10,
     height: 50,
-    marginRight: "20%",
+    width: "60%",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.white,
     padding: 10,
     borderRadius: 25,
+    alignSelf: "flex-end",
   },
   nextText: {
     fontSize: 18,
@@ -83,23 +121,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 25,
     backgroundColor: Colors.darkBlue,
-    flex: 1
   },
   normalText: {
+    width: "80%",
     fontSize: 16,
     fontWeight: "bold",
+    color: Colors.black,
+    textAlign: 'center'
   },
   icon: {
     marginRight: 15
   },
+  iconRemove: {
+    width: '20%',
+    textAlign: 'center',
+  },
   newSubjectText: {
     fontSize: 16,
-    textAlign: "center"
+    textAlign: "center",
   },
   newSubjectView: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: 'transparent',
-  }
+  },
+  item: {
+    backgroundColor: Colors.white,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginVertical: 7,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row"
+  },
 });
