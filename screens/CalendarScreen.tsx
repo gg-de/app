@@ -15,7 +15,7 @@ export default function CalendarScreen() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Bem Vindo ao GG-DE! O gerador de grades para desempenho educacional!</Text>
       </View>
-        <Text style={styles.text} onPress={() => navigation.navigate('RegisterAvailabilityScreen')}>Cadastrar novo cronograma</Text>
+        <Text style={styles.text} onPress={() => navigation.navigate('RegisterSubjectScreen')}>Cadastrar novo cronograma</Text>
     </View>
   );
 }

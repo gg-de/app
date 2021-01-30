@@ -10,6 +10,7 @@ import { Text, View, ScrollView } from "../components/Themed";
 export default function RegisterAvailabilityScreen() {
   const navigation = useNavigation();
   const dayHours = {
+    _06_07: false,
     _07_08: false,
     _08_09: false,
     _09_10: false,
@@ -28,6 +29,7 @@ export default function RegisterAvailabilityScreen() {
   }
 
   const hoursList = [
+    {key: '_06_07', text: '6h às 7h'},
     {key: '_07_08', text: '7h às 8h'},
     {key: '_08_09', text: '8h às 9h'},
     {key: '_09_10', text: '9h às 10h'},
@@ -81,25 +83,27 @@ export default function RegisterAvailabilityScreen() {
         <Text style={styles.title}>
           Marque os horários ao qual tem disponibilidade para estudar
         </Text>
-        {weekdaysList.map((weekday, key) => {
-            return (
-              <View key={key} style={styles.itemsContainer}>
-                <Text style={styles.normalText}>{weekday.text}</Text>
+        {weekdaysList.map((weekday, itemKey) => {
+          return (
+            <View>
+              <Text style={styles.normalText}>{weekday.text}</Text>
+              <View key={itemKey} style={styles.itemsContainer}>
                 {hoursList.map((hour, key) => {
                   return (
                     <CheckBox
-                      key={key}
-                      title={hour.text}
-                      containerStyle={styles.checkboxContainer}
-                      textStyle={styles.checkboxText}
-                      checked={availability[weekday.key][hour.key]}
-                      onPress={() => handleChange(weekday.key, hour.key)}
+                    key={key}
+                    title={hour.text}
+                    containerStyle={styles.checkboxContainer}
+                    textStyle={styles.checkboxText}
+                    checked={availability[weekday.key][hour.key]}
+                    onPress={() => handleChange(weekday.key, hour.key)}
                     />
-                  )
-                })}
+                    )
+                  })}
               </View>
-            )
-          })}
+            </View>
+          )
+        })}
         <TouchableOpacity style={styles.finishBtn} onPress={onFinish}>
           <Text style={styles.finishText}>Finalizar</Text>
         </TouchableOpacity>
@@ -120,9 +124,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 20,
   },
   itemsContainer: {
     marginVertical: 15,
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    flexDirection: 'row'
   },
   finishBtn: {
     marginTop: 15,
@@ -131,7 +139,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.darkBlue,
     padding: 10,
     borderRadius: 25,
   },
@@ -145,8 +153,12 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     backgroundColor: Colors.primary,
+    flexDirection: 'column',
+    width: "43%",
+    
   },
   checkboxText: {
+    paddingHorizontal: 0,
     color: Colors.white,
   },
 });

@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.darkBlue,
     padding: 10,
     borderRadius: 25,
   },

@@ -22,5 +22,6 @@ export default {
   darkBlue: '#001C55',
   white: '#FFFFFF',
   danger: '#DC3545',
-  success: '#28A745'
+  success: '#28A745',
+  black: '#000'
 };

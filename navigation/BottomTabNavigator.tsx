@@ -9,13 +9,14 @@ import SettingsScreen from "../screens/SettingsScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import RegisterAvailabilityScreen from "../screens/RegisterAvailability";
+import RegisterSubjectScreen from "../screens/RegisterSubject";
 import {
   BottomTabParamList,
   CalendarParamList,
   SettingsParamList,
   ProfileParamList
 } from "../types";
-import headerConfig from "./index";
+import { headerConfig } from "./utils";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -78,6 +79,12 @@ function CalendarNavigator() {
       <CalendarStack.Screen
         name="RegisterAvailabilityScreen"
         component={RegisterAvailabilityScreen}
+        options={headerConfig("")}
+      />
+      <CalendarStack.Screen
+        name="RegisterSubjectScreen"
+        component={RegisterSubjectScreen}
+        options={headerConfig("")}
       />
     </CalendarStack.Navigator>
   );
@@ -108,3 +115,5 @@ function ProfileNavigator() {
     </ProfileStack.Navigator>
   );
 }
+
+
