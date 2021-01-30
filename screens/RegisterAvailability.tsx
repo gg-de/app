@@ -93,7 +93,7 @@ export default function RegisterAvailabilityScreen() {
                       containerStyle={styles.checkboxContainer}
                       textStyle={styles.checkboxText}
                       checked={availability[weekday.key][hour.key]}
-                      onPress={() => handleChange("monday", hour.key)}
+                      onPress={() => handleChange(weekday.key, hour.key)}
                     />
                   )
                 })}
