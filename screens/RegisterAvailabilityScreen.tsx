@@ -6,12 +6,8 @@ import Constants from 'expo-constants';
 
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
+import { Availability } from "../models/schedule.model";
 
-
-interface AvailabilityType {
-  weekday: number,
-  time: number
-}
 
 export default function RegisterAvailabilityScreen() {
   const navigation = useNavigation();
@@ -87,7 +83,7 @@ export default function RegisterAvailabilityScreen() {
   };
 
   const getAvailabilityJson = () => {
-    const data: AvailabilityType[] = [];
+    const data: Availability[] = [];
     Object.keys(availability).forEach(function(day, index) {
       Object.keys(availability[day]).forEach(function(hour) {
         if (availability[day][hour]) {

@@ -7,12 +7,8 @@ import Toast, {DURATION} from 'react-native-easy-toast';
 
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
+import { Subject } from "../models/schedule.model";
 
-
-interface Subject {
-  title: string;
-  hours: number;
-}
 
 export default function RegisterSubjectScreen() {
   const navigation = useNavigation();

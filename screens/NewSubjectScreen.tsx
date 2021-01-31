@@ -13,11 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
 import { LabelInput } from "../components/LabelInput";
+import { Subject } from "../models/schedule.model";
 
-interface Subject {
-  title: string;
-  hours: number;
-}
 
 const hoursList: number[] = [1, 2, 3, 4, 5]
 
