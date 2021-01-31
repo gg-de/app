@@ -91,7 +91,7 @@ export default function RegisterAvailabilityScreen() {
                 {hoursList.map((hour, key) => {
                   return (
                     <CheckBox
-                    key={key}
+                    key={itemKey.toString() + '_' + key.toString()}
                     title={hour.text}
                     containerStyle={styles.checkboxContainer}
                     textStyle={styles.checkboxText}

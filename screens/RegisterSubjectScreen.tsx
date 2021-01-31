@@ -33,11 +33,11 @@ export default function RegisterSubjectScreen() {
     navigation.navigate("NewSubjectScreen");
   };
 
-  const saveSubjects = () => {
-    AsyncStorage.setItem('subjectsAdded', JSON.stringify(subjects));
+  const saveSubjects = async () => {
+    await AsyncStorage.setItem('subjectsAdded', JSON.stringify(subjects));
   };
 
-  const removeItem = (item) => {
+  const removeItem = async (item) => {
     setSubjects(subjects.filter((_item) => _item.name !== item.name));
   };
 
@@ -73,7 +73,11 @@ export default function RegisterSubjectScreen() {
 
   React.useEffect(() => {
     retrieveSubjectsData();
-  }, [retrieved]);
+  }, []);
+
+  React.useEffect(() => {
+    saveSubjects()
+  }, [subjects]);
 
   React.useEffect(() => {
     retrieveSubjectsData();
