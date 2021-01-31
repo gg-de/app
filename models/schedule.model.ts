@@ -4,7 +4,7 @@ export interface Schedule {
 }
 
 export interface Availability {
-  weekday: number,
+  weekday: string,
   time: number
 }
 

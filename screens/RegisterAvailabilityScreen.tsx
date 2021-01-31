@@ -6,8 +6,17 @@ import Constants from 'expo-constants';
 
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
-import { Availability } from "../models/schedule.model";
+import { Availability, Schedule } from "../models/schedule.model";
+import { createSchedule } from "../services/scheduleService";
 
+
+interface AvailabilityObj {
+  monday: object,
+  tuesday: object,
+  wednesday: object,
+  thursday: object,
+  friday: object,
+}
 
 export default function RegisterAvailabilityScreen() {
   const navigation = useNavigation();
@@ -50,19 +59,19 @@ export default function RegisterAvailabilityScreen() {
   ]
 
   const weekdaysList = [
-    {key: '2', text: 'Segunda-feira'},
-    {key: '3', text: 'Terça-feira'},
-    {key: '4', text: 'Quarta-feira'},
-    {key: '5', text: 'Quinta-feira'},
-    {key: '6', text: 'Sexta-feira'},
+    {key: 'monday', text: 'Segunda-feira'},
+    {key: 'tuesday', text: 'Terça-feira'},
+    {key: 'wednesday', text: 'Quarta-feira'},
+    {key: 'thursday', text: 'Quinta-feira'},
+    {key: 'friday', text: 'Sexta-feira'},
   ]
 
-  const [availability, onChangeAvailability] = React.useState({
-    '2': dayHours,
-    '3': dayHours,
-    '4': dayHours,
-    '5': dayHours,
-    '6': dayHours,
+  const [availability, onChangeAvailability] = React.useState<AvailabilityObj>({
+    'monday': dayHours,
+    'tuesday': dayHours,
+    'wednesday': dayHours,
+    'thursday': dayHours,
+    'friday': dayHours,
   });
   
   function handleChange(day: string, hourRange: string) {
@@ -74,12 +83,16 @@ export default function RegisterAvailabilityScreen() {
 
   const onFinish = async () => {
     const valueString = await AsyncStorage.getItem('subjectsAdded') || '[]';
-    const data = {
+    const data: Schedule = {
       subjects: JSON.parse(valueString),
       availabilities: getAvailabilityJson()
     }
-    // TODO send this data to the backend
-    navigation.navigate("CalendarScreen");
+    
+    createSchedule(data)
+      .then((res) => {
+        AsyncStorage.setItem('schedule', res.data)
+        navigation.navigate("CalendarScreen");
+      });
   };
 
   const getAvailabilityJson = () => {
@@ -88,7 +101,7 @@ export default function RegisterAvailabilityScreen() {
       Object.keys(availability[day]).forEach(function(hour) {
         if (availability[day][hour]) {
           data.push({
-            weekday: parseInt(day),
+            weekday: day,
             time: parseInt(hour)
           });
         }
