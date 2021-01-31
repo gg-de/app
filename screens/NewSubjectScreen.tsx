@@ -15,7 +15,7 @@ import { Text, View, ScrollView } from "../components/Themed";
 import { LabelInput } from "../components/LabelInput";
 
 interface Subject {
-  name: string;
+  title: string;
   hours: number;
 }
 
@@ -25,7 +25,7 @@ export default function NewSubjectScreen() {
   const navigation = useNavigation();
 
   const [hourSelected, setHourSelected] = React.useState<number>(1);
-  const [name, setName] = React.useState<string>("");
+  const [title, setTitle] = React.useState<string>("");
 
   const onFinish = async () => {
     try {
@@ -34,13 +34,13 @@ export default function NewSubjectScreen() {
       if (valueString !== null) {
         value = JSON.parse(valueString);
         const subject: Subject = {
-          name,
+          title,
           hours: hourSelected
         }
         value.push(subject);
       } else {
         const subject: Subject = {
-          name,
+          title,
           hours: hourSelected
         }
         value = [subject];
@@ -74,7 +74,7 @@ export default function NewSubjectScreen() {
 
   return (
     <View style={styles.container}>
-      <LabelInput label="Nome da matéria:" placeholder="Ex.: Matemática" text={name} onChangeText={setName}></LabelInput>
+      <LabelInput label="Nome da matéria:" placeholder="Ex.: Matemática" text={title} onChangeText={setTitle}></LabelInput>
       <Text style={styles.normalText}>Quantas horas semanais deseja dedicar?</Text>
       <View style={styles.circlesContainer}>
         {hoursList.map((hour, key) => {

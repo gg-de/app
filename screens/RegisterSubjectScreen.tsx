@@ -3,19 +3,21 @@ import { StyleSheet, TextInput, TouchableOpacity, FlatList, AsyncStorage } from 
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
 
 
 interface Subject {
-  name: string;
+  title: string;
   hours: number;
 }
 
 export default function RegisterSubjectScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  let toast: Toast;
 
   const [retrieved, setRetrieved] = React.useState(false);
 
@@ -26,7 +28,11 @@ export default function RegisterSubjectScreen() {
   };
 
   const onNext = () => {
-    navigation.navigate("RegisterAvailabilityScreen");
+    if(subjects.length > 0) {
+      navigation.navigate("RegisterAvailabilityScreen");
+    } else {
+      toast.show('Adicione pelo menos uma matéria para continuar.', 5000);
+    }
   };
 
   const addItem = () => {
@@ -38,12 +44,12 @@ export default function RegisterSubjectScreen() {
   };
 
   const removeItem = async (item) => {
-    setSubjects(subjects.filter((_item) => _item.name !== item.name));
+    setSubjects(subjects.filter((_item) => _item.title !== item.title));
   };
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.normalText}>{item.name} - {item.hours} hora(s)</Text>
+      <Text style={styles.normalText}>{item.title} - {item.hours} hora(s)</Text>
       <Ionicons
         size={30}
         style={styles.iconRemove}
@@ -85,12 +91,13 @@ export default function RegisterSubjectScreen() {
 
   return (
     <View style={styles.container}>
+      <Toast ref={(toast_) => toast = toast_} position="center" />
       <FlatList
         style={{flexGrow: 0}}
         data={subjects}
         renderItem={renderItem}
         extraData={subjects.length}
-        keyExtractor={(item, index) => item.name}
+        keyExtractor={(item, index) => item.title}
         persistentScrollbar={true}
       />
       <View style={styles.viewContainer}>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { CheckBox } from "react-native-elements";
 import Constants from 'expo-constants';
@@ -7,60 +7,66 @@ import Constants from 'expo-constants';
 import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
 
+
+interface AvailabilityType {
+  weekday: number,
+  time: number
+}
+
 export default function RegisterAvailabilityScreen() {
   const navigation = useNavigation();
   const dayHours = {
-    _06_07: false,
-    _07_08: false,
-    _08_09: false,
-    _09_10: false,
-    _10_11: false,
-    _11_12: false,
-    _12_13: false,
-    _13_14: false,
-    _14_15: false,
-    _15_16: false,
-    _16_17: false,
-    _17_18: false,
-    _18_19: false,
-    _19_20: false,
-    _20_21: false,
-    _21_22: false,
+    '6': false,
+    '7': false,
+    '8': false,
+    '9': false,
+    '10': false,
+    '11': false,
+    '12': false,
+    '13': false,
+    '14': false,
+    '15': false,
+    '16': false,
+    '17': false,
+    '18': false,
+    '19': false,
+    '20': false,
+    '21': false,
   }
 
   const hoursList = [
-    {key: '_06_07', text: '6h às 7h'},
-    {key: '_07_08', text: '7h às 8h'},
-    {key: '_08_09', text: '8h às 9h'},
-    {key: '_09_10', text: '9h às 10h'},
-    {key: '_10_11', text: '10h às 11h'},
-    {key: '_11_12', text: '11h às 12h'},
-    {key: '_12_13', text: '12h às 13h'},
-    {key: '_13_14', text: '13h às 14h'},
-    {key: '_14_15', text: '14h às 15h'},
-    {key: '_15_16', text: '15h às 16h'},
-    {key: '_16_17', text: '16h às 17h'},
-    {key: '_17_18', text: '17h às 18h'},
-    {key: '_18_19', text: '18h às 19h'},
-    {key: '_19_20', text: '19h às 20h'},
-    {key: '_20_21', text: '20h às 21h'},
-    {key: '_21_22', text: '21h às 22h'}
+    {key: '6', text: '6h às 7h'},
+    {key: '7', text: '7h às 8h'},
+    {key: '8', text: '8h às 9h'},
+    {key: '9', text: '9h às 10h'},
+    {key: '10', text: '10h às 11h'},
+    {key: '11', text: '11h às 12h'},
+    {key: '12', text: '12h às 13h'},
+    {key: '13', text: '13h às 14h'},
+    {key: '14', text: '14h às 15h'},
+    {key: '15', text: '15h às 16h'},
+    {key: '16', text: '16h às 17h'},
+    {key: '17', text: '17h às 18h'},
+    {key: '18', text: '18h às 19h'},
+    {key: '19', text: '19h às 20h'},
+    {key: '20', text: '20h às 21h'},
+    {key: '21', text: '21h às 22h'}
   ]
 
   const weekdaysList = [
-    {key: 'monday', text: 'Segunda-feira'},
-    {key: 'tuesday', text: 'Terça-feira'},
-    {key: 'wednesday', text: 'Quarta-feira'},
-    {key: 'thursday', text: 'Quinta-feira'},
-    {key: 'friday', text: 'Sexta-feira'},
+    {key: '2', text: 'Segunda-feira'},
+    {key: '3', text: 'Terça-feira'},
+    {key: '4', text: 'Quarta-feira'},
+    {key: '5', text: 'Quinta-feira'},
+    {key: '6', text: 'Sexta-feira'},
   ]
 
   const [availability, onChangeAvailability] = React.useState({
-    monday: dayHours,
-    tuesday: dayHours,
-    wednesday: dayHours,
-    thursday: dayHours,
-    friday: dayHours,
+    '2': dayHours,
+    '3': dayHours,
+    '4': dayHours,
+    '5': dayHours,
+    '6': dayHours,
   });
   
   function handleChange(day: string, hourRange: string) {
@@ -70,8 +76,29 @@ export default function RegisterAvailabilityScreen() {
     }));
   };
 
-  const onFinish = () => {
+  const onFinish = async () => {
+    const valueString = await AsyncStorage.getItem('subjectsAdded') || '[]';
+    const data = {
+      subjects: JSON.parse(valueString),
+      availabilities: getAvailabilityJson()
+    }
+    // TODO send this data to the backend
     navigation.navigate("CalendarScreen");
+  };
+
+  const getAvailabilityJson = () => {
+    const data: AvailabilityType[] = [];
+    Object.keys(availability).forEach(function(day, index) {
+      Object.keys(availability[day]).forEach(function(hour) {
+        if (availability[day][hour]) {
+          data.push({
+            weekday: parseInt(day),
+            time: parseInt(hour)
+          });
+        }
+      })
+    });
+    return data;
   };
 
   React.useEffect(() => {
@@ -87,7 +114,7 @@ export default function RegisterAvailabilityScreen() {
           return (
             <View>
               <Text style={styles.normalText}>{weekday.text}</Text>
-              <View key={itemKey} style={styles.itemsContainer}>
+              <View key={'day_' + itemKey} style={styles.itemsContainer}>
                 {hoursList.map((hour, key) => {
                   return (
                     <CheckBox
