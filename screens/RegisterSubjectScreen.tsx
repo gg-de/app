@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StyleSheet, TextInput, TouchableOpacity, FlatList, AsyncStorage } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -15,6 +15,7 @@ interface Subject {
 
 export default function RegisterSubjectScreen() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const [retrieved, setRetrieved] = React.useState(false);
 
@@ -29,10 +30,6 @@ export default function RegisterSubjectScreen() {
   };
 
   const addItem = () => {
-    // let item = {name: 'teste', hours: 4}
-    // subjects.push(item);
-    // setSubjects([...subjects]);
-    // saveSubjects();
     navigation.navigate("NewSubjectScreen");
   };
 
@@ -57,24 +54,30 @@ export default function RegisterSubjectScreen() {
     </View>
   )
 
-  React.useEffect(() => {
-    const retrieveData = async () => {
-      try {
-        const valueString = await AsyncStorage.getItem('subjectsAdded');
-        if (valueString) {
-          const value = JSON.parse(valueString);
-          setSubjects(value);
-        }
-      } catch (error) {
-        console.log(error);
+  const retrieveSubjectsData = async () => {
+    try {
+      const valueString = await AsyncStorage.getItem('subjectsAdded');
+      if (valueString) {
+        const value = JSON.parse(valueString);
+        setSubjects(value);
       }
-    };
-    // Retrieve if has new data
-    if (!retrieved) {
-      retrieveData();
-      setRetrieved(true);
+    } catch (error) {
+      console.log(error);
     }
+  };
+  // Retrieve if has new data
+  if (!retrieved) {
+    retrieveSubjectsData();
+    setRetrieved(true);
+  }
+
+  React.useEffect(() => {
+    retrieveSubjectsData();
   }, [retrieved]);
+
+  React.useEffect(() => {
+    retrieveSubjectsData();
+  },[isFocused]);
 
   return (
     <View style={styles.container}>
