@@ -49,7 +49,7 @@ export default function RegisterSubjectScreen() {
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.normalText}>{item.title} - {item.hours} hora(s)</Text>
+      <Text style={styles.normalText}>{item.title} - {item.hours} hora{item.hours > 1 ? 's' : ''}</Text>
       <Ionicons
         size={30}
         style={styles.iconRemove}
