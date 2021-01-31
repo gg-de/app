@@ -8,8 +8,9 @@ import useColorScheme from "../hooks/useColorScheme";
 import SettingsScreen from "../screens/SettingsScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import RegisterAvailabilityScreen from "../screens/RegisterAvailability";
-import RegisterSubjectScreen from "../screens/RegisterSubject";
+import RegisterAvailabilityScreen from "../screens/RegisterAvailabilityScreen";
+import RegisterSubjectScreen from "../screens/RegisterSubjectScreen";
+import NewSubjectScreen from "../screens/NewSubjectScreen";
 import {
   BottomTabParamList,
   CalendarParamList,
@@ -84,6 +85,11 @@ function CalendarNavigator() {
       <CalendarStack.Screen
         name="RegisterSubjectScreen"
         component={RegisterSubjectScreen}
+        options={headerConfig("")}
+      />
+      <CalendarStack.Screen
+        name="NewSubjectScreen"
+        component={NewSubjectScreen}
         options={headerConfig("")}
       />
     </CalendarStack.Navigator>

@@ -23,5 +23,6 @@ export default {
   white: '#FFFFFF',
   danger: '#DC3545',
   success: '#28A745',
+  warning: '#FFBE00',
   black: '#000'
 };

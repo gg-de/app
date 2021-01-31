@@ -13,6 +13,7 @@ export type CalendarParamList = {
   CalendarScreen: undefined;
   RegisterAvailabilityScreen: undefined;
   RegisterSubjectScreen: undefined;
+  NewSubjectScreen: undefined;
 };
 
 export type SettingsParamList = {

@@ -29,10 +29,11 @@ export default function RegisterSubjectScreen() {
   };
 
   const addItem = () => {
-    let item = {name: 'teste', hours: 4}
-    subjects.push(item);
-    setSubjects([...subjects]);
-    saveSubjects();
+    // let item = {name: 'teste', hours: 4}
+    // subjects.push(item);
+    // setSubjects([...subjects]);
+    // saveSubjects();
+    navigation.navigate("NewSubjectScreen");
   };
 
   const saveSubjects = () => {
