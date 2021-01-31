@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TextInput, TouchableOpacity, FlatList } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, FlatList, AsyncStorage } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,14 +8,17 @@ import Colors from "../constants/Colors";
 import { Text, View, ScrollView } from "../components/Themed";
 
 
+interface Subject {
+  name: string;
+  hours: number;
+}
+
 export default function RegisterSubjectScreen() {
   const navigation = useNavigation();
 
+  const [retrieved, setRetrieved] = React.useState(false);
 
-  const [subjects, onChangeSubjects] = React.useState([
-    {name: 'Matemática', hours: 2},
-    {name: 'Biologia', hours: 1},
-  ]);
+  const [subjects, setSubjects] = React.useState<Subject[]>([]);
 
   const addSubject = () => {
     addItem();
@@ -28,11 +31,16 @@ export default function RegisterSubjectScreen() {
   const addItem = () => {
     let item = {name: 'teste', hours: 4}
     subjects.push(item);
-    onChangeSubjects([...subjects]);
+    setSubjects([...subjects]);
+    saveSubjects();
+  };
+
+  const saveSubjects = () => {
+    AsyncStorage.setItem('subjectsAdded', JSON.stringify(subjects));
   };
 
   const removeItem = (item) => {
-    onChangeSubjects(subjects.filter((_item) => _item.name !== item.name));
+    setSubjects(subjects.filter((_item) => _item.name !== item.name));
   };
 
   const renderItem = ({ item }) => (
@@ -48,7 +56,26 @@ export default function RegisterSubjectScreen() {
     </View>
   )
 
-return (
+  React.useEffect(() => {
+    const retrieveData = async () => {
+      try {
+        const valueString = await AsyncStorage.getItem('subjectsAdded');
+        if (valueString) {
+          const value = JSON.parse(valueString);
+          setSubjects(value);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    // Retrieve if has new data
+    if (!retrieved) {
+      retrieveData();
+      setRetrieved(true);
+    }
+  }, [retrieved]);
+
+  return (
     <View style={styles.container}>
       <FlatList
         style={{flexGrow: 0}}
