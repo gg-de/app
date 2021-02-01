@@ -1,17 +1,18 @@
-const tintColorLight = '#2f95dc';
+const tintColorLight = '#fff';
 const tintColorDark = '#fff';
 
 export default {
+  // TODO change the colors of dark theme
   light: {
-    text: '#000',
-    background: '#fff',
-    tint: tintColorLight,
+    text: '#fff',
+    background: '#5458C9',
+    tint: tintColorDark,
     tabIconDefault: '#ccc',
-    tabIconSelected: tintColorLight,
+    tabIconSelected: tintColorDark,
   },
   dark: {
     text: '#fff',
-    background: '#000',
+    background: '#5458C9',
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
@@ -21,5 +22,7 @@ export default {
   darkBlue: '#001C55',
   white: '#FFFFFF',
   danger: '#DC3545',
-  success: '#28A745'
+  success: '#28A745',
+  warning: '#FFBE00',
+  black: '#000'
 };

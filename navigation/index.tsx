@@ -13,6 +13,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { headerConfig } from "./utils";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -55,19 +56,4 @@ function RootNavigator() {
       />
     </AppStack.Navigator>
   );
-}
-
-function headerConfig(title: string): object {
-  return {
-    title,
-    headerShown: true,
-    headerStyle: {
-      backgroundColor: Colors.darkBlue,
-    },
-    headerTintColor: "#fff",
-    headerTitleStyle: {
-      fontWeight: "bold",
-    },
-    headerTitleAlign: "center",
-  };
 }
