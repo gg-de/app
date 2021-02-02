@@ -4,14 +4,22 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Calendário: undefined;
+  Perfil: undefined;
+  Configurações: undefined;
 };
 
-export type TabOneParamList = {
-  TabOneScreen: undefined;
+export type CalendarParamList = {
+  CalendarScreen: undefined;
+  RegisterAvailabilityScreen: undefined;
+  RegisterSubjectScreen: undefined;
+  NewSubjectScreen: undefined;
 };
 
-export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+export type SettingsParamList = {
+  SettingsScreen: undefined;
 };
+
+export type ProfileParamList = {
+  ProfileScreen: undefined;
+}
