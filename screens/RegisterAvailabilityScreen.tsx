@@ -88,54 +88,16 @@ export default function RegisterAvailabilityScreen() {
       availabilities: getAvailabilityJson()
     }
 
-  AsyncStorage.setItem('schedule', JSON.stringify({
-    "friday": [],
-    "monday": [
-      {
-        "subject": "Matemática",
-        "time": 6,
-      },
-      {
-        "subject": "Biologia",
-        "time": 14,
-      },
-    ],
-    "saturday": [],
-    "sunday": [],
-    "thursday": [],
-    "tuesday": [
-      {
-        "subject": "Matemática",
-        "time": 14,
-      },
-    ],
-    "wednesday": [
-      {
-        "subject": "Matemática",
-        "time": 8,
-      },
-      {
-        "subject": "Biologia",
-        "time": 10,
-      },
-      {
-        "subject": "Inglês",
-        "time": 12,
-      },
-    ],
-  }))
-  navigation.navigate("CalendarScreen");
+    createSchedule(data)
+      .then((res) => {
+        AsyncStorage.setItem('schedule', JSON.stringify(res.data))
 
-    // createSchedule(data)
-    //   .then((res) => {
-    //     AsyncStorage.setItem('schedule', JSON.stringify(res.data))
-
-    //     navigation.navigate("CalendarScreen");
-    //   })
-    //   .catch((error) => {
-    //     console.warn("sdasfksakj")
-    //     console.log(error)
-    //   });
+        navigation.navigate("CalendarScreen");
+      })
+      .catch((error) => {
+        console.warn("sdasfksakj")
+        console.log(error)
+      });
   };
 
   const getAvailabilityJson = () => {
