@@ -3,10 +3,20 @@ import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AsyncStorage } from "react-native";
 import Toast from 'react-native-easy-toast';
+import * as Google from "expo-google-app-auth";
+import { Ionicons } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
+import GoogleScopes from "../constants/GoogleScopes";
 import { Text, View } from "../components/Themed";
-import { logIn } from "../services/userService";
+import { logIn, createUser } from "../services/userService";
+import { User } from "../models/user.model";
+
+
+const IOS_CLIENT_ID =
+  "your-ios-client-id";
+const ANDROID_CLIENT_ID =
+  "770873265156-6u8vgas9fg13uea7upa5giac85agrrme.apps.googleusercontent.com";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -14,6 +24,57 @@ export default function LoginScreen() {
 
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
+
+  React.useEffect(() => {
+
+  }, []);
+
+  const signInWithGoogle = async () => {
+    try {
+      const result = await Google.logInAsync({
+        iosClientId: IOS_CLIENT_ID,
+        androidClientId: ANDROID_CLIENT_ID,
+        scopes: GoogleScopes
+      });
+
+      if (result.type === "success") {
+        const googleData = {
+          accessToken: result.accessToken,
+          idToken: result.idToken,
+          refreshToken: result.refreshToken
+        }
+        await AsyncStorage.setItem('googleData', JSON.stringify(googleData));
+        const user: User = {
+          email: result.user.email,
+          password: '123456',
+          fullName: result.user.name
+        };
+
+        logIn(user.email, user.password)
+          .then((res) => {
+            const token = res.data.token;
+            AsyncStorage.setItem('token', JSON.stringify(token));
+            navigation.navigate("Home");
+          })
+          .catch((error) => {
+            createUser(user)
+              .then((res) => {
+                const token = res.data.token;
+                AsyncStorage.setItem('token', JSON.stringify(token));
+                navigation.navigate("Home");
+              })
+              .catch((error) => {
+                toast.show('Ocorrou um erro ao cadastrar, tente novamente mais tarde.', 4000);
+              })
+          });
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      toast.show('Erro ao conectar com o google.', 4000);
+      return { error: true };
+    }
+  };
 
   const onLogin = () => {
     logIn(email, password)
@@ -49,6 +110,11 @@ export default function LoginScreen() {
 
       <TouchableOpacity style={styles.loginBtn} onPress={onLogin}>
         <Text style={styles.loginText}>Entrar</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.loginBtn} onPress={signInWithGoogle}>
+        <Ionicons size={30} name="logo-google" color={Colors.white}/>
+        <Text style={styles.loginGoogleText}>Entrar com o Google</Text>
       </TouchableOpacity>
 
       <Text
@@ -95,9 +161,17 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
     padding: 10,
     borderRadius: 25,
+    flexDirection: 'row'
   },
   loginText: {
     fontSize: 18,
     fontWeight: "bold",
+    width: 'auto'
   },
+  loginGoogleText: {
+    paddingLeft: 15,
+    fontSize: 18,
+    fontWeight: "bold",
+    width: 'auto'
+  }
 });
