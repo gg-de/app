@@ -1,3 +1,6 @@
+import { RouteProp } from '@react-navigation/native';
+
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
@@ -18,6 +21,14 @@ export type CalendarParamList = {
 
 export type SettingsParamList = {
   SettingsScreen: undefined;
+  GoogleClassroomCoursesScreen: undefined;
+  GoogleClassroomCourseWorksScreen: { accessToken: string, courseId: string }
+};
+
+type GoogleClassroomCourseWorksScreenRouteProp = RouteProp<SettingsParamList, 'GoogleClassroomCourseWorksScreen'>;
+
+export type GoogleClassroomCourseWorksScreenProps = {
+  route: GoogleClassroomCourseWorksScreenRouteProp;
 };
 
 export type ProfileParamList = {
