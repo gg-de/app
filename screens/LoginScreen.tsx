@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AsyncStorage } from "react-native";
+import Toast from 'react-native-easy-toast';
 
 import Colors from "../constants/Colors";
 import { Text, View } from "../components/Themed";
@@ -9,6 +10,7 @@ import { logIn } from "../services/userService";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  let toast: Toast;
 
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
@@ -21,12 +23,13 @@ export default function LoginScreen() {
         navigation.navigate("Home");
       })
       .catch((error) => {
-        console.warn("ERROR");
+        toast.show('Usuário ou senha inválidos.', 4000);
       });
   };
 
   return (
     <View style={styles.container}>
+      <Toast ref={(toast_) => toast = toast_} position="center" />
       <TextInput
         style={styles.input}
         onChangeText={(text) => onChangeEmail(text)}

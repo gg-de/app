@@ -18,16 +18,17 @@ import { headerConfig } from "./utils";
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation({
-  colorScheme,
+  colorScheme, token
 }: {
   colorScheme: ColorSchemeName;
+  token: string;
 }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
-      <RootNavigator />
+      <RootNavigator initialRouteName={token ? "Home" : "Login"} />
     </NavigationContainer>
   );
 }
@@ -36,11 +37,15 @@ export default function Navigation({
 // Read more here: https://reactnavigation.org/docs/modal
 const AppStack = createStackNavigator();
 
-function RootNavigator() {
+function RootNavigator({
+  initialRouteName
+}: {
+    initialRouteName: string;
+  }) {
   return (
     <AppStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={"Login"}
+      initialRouteName={initialRouteName}
     >
       <AppStack.Screen name="Login" component={LoginScreen} />
       <AppStack.Screen
