@@ -1,9 +1,11 @@
 import * as React from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { AsyncStorage } from "react-native";
 
 import Colors from "../constants/Colors";
 import { Text, View } from "../components/Themed";
+import { logIn } from "../services/userService";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -12,7 +14,15 @@ export default function LoginScreen() {
   const [password, onChangePassword] = React.useState("");
 
   const onLogin = () => {
-    navigation.navigate("Home");
+    logIn(email, password)
+      .then((res) => {
+        const token = res.data.token;
+        AsyncStorage.setItem('token', JSON.stringify(token));
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.warn("ERROR");
+      });
   };
 
   return (

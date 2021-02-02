@@ -1,23 +1,47 @@
 import * as React from "react";
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { AsyncStorage } from "react-native";
+import Toast from 'react-native-easy-toast';
 
 import Colors from "../constants/Colors";
 import { Text, View } from "../components/Themed";
+import { createUser } from "../services/userService";
+import { User } from "../models/user.model";
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
+  let toast: Toast;
 
   const [name, onChangeName] = React.useState("");
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
 
   const onRegister = () => {
-    navigation.navigate("Home");
+    const user: User = {
+      email,
+      fullName: name,
+      password
+    }
+    let email_re = RegExp("[a-zA-Z0-9_\\.\\+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-\\.]+");
+    if (name.length > 3 && email_re.test(email) && password.length > 4) {   
+      createUser(user)
+        .then((res) => {
+          const token = res.data.token;
+          AsyncStorage.setItem('token', JSON.stringify(token));
+          navigation.navigate("Home");
+        })
+        .catch((error) => {
+          toast.show('Ocorrou um erro ao cadastrar, tente novamente mais tarde.', 4000);
+        })
+    } else {
+      toast.show('Preencha todos os campos para finalizar o cadastro.', 4000);
+    }
   };
 
   return (
     <View style={styles.container}>
+      <Toast ref={(toast_) => toast = toast_} position="bottom" />
       <TextInput
         style={styles.input}
         onChangeText={(text) => onChangeName(text)}

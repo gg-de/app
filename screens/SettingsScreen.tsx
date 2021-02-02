@@ -3,14 +3,20 @@ import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AsyncStorage } from "react-native";
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { TextButton } from '../components/StyledButton';
 import Colors from '../constants/Colors';
 
+
 export default function SettingsScreen() {
   const navigation = useNavigation();
+
+  const logOut = async () => {
+    await AsyncStorage.removeItem('token');
+    navigation.navigate('Login')
+  };
 
   return (
     <View style={styles.container}>
@@ -26,7 +32,7 @@ export default function SettingsScreen() {
         </View>
       </View>
       <View style={styles.logoutContainer}>
-        <TextButton text="Sair" backgroundColor={Colors.danger} onPress={() => navigation.navigate('Login')}></TextButton>
+        <TextButton text="Sair" backgroundColor={Colors.danger} onPress={logOut}></TextButton>
       </View>
     </View>
   );
