@@ -11,6 +11,8 @@ import ProfileScreen from "../screens/ProfileScreen";
 import RegisterAvailabilityScreen from "../screens/RegisterAvailabilityScreen";
 import RegisterSubjectScreen from "../screens/RegisterSubjectScreen";
 import NewSubjectScreen from "../screens/NewSubjectScreen";
+import ClassroomCoursesScreen from "../screens/google/ClassroomCoursesScreen";
+import ClassroomCourseWorksScreen from "../screens/google/ClassroomCourseWorksScreen";
 import {
   BottomTabParamList,
   CalendarParamList,
@@ -104,6 +106,15 @@ function SettingsNavigator() {
       <SettingsStack.Screen
         name="SettingsScreen"
         component={SettingsScreen}
+      />
+      <SettingsStack.Screen
+        name="GoogleClassroomCoursesScreen"
+        component={ClassroomCoursesScreen}
+      />
+      <SettingsStack.Screen
+        name="GoogleClassroomCourseWorksScreen"
+        component={ClassroomCourseWorksScreen}
+        initialParams={{ accessToken: '', courseId: '' }}
       />
     </SettingsStack.Navigator>
   );

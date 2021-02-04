@@ -12,11 +12,23 @@ import Colors from '../constants/Colors';
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
+  const [googleAccessToken, setGoogleAccessToken] = React.useState('');
 
   const logOut = async () => {
     await AsyncStorage.removeItem('token');
     navigation.navigate('Login')
   };
+
+  React.useEffect(() => {
+    const getGoogleToken = async () => {
+      const googleDataString = await AsyncStorage.getItem('googleData');
+      if (googleDataString) {
+        const googleData = JSON.parse(googleDataString);
+        setGoogleAccessToken(googleData.accessToken)
+      }
+    };
+    getGoogleToken();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -26,10 +38,14 @@ export default function SettingsScreen() {
           <Ionicons style={styles.cardIcon} size={30} name="notifications" color={Colors.primary}/>
           <Text style={styles.cardText}>Notificações</Text>
         </View>
-        <View style={styles.card}>
-          <Ionicons style={styles.cardIcon} size={30} name="logo-google" color={Colors.primary}/>
-          <Text style={styles.cardText}>Sincronizar com o Google Sala de Aula</Text>
-        </View>
+        {
+          googleAccessToken ? (
+            <View style={styles.card}>
+              <Ionicons style={styles.cardIcon} size={30} name="logo-google" color={Colors.primary}/>
+              <Text style={styles.cardText} onPress={() => navigation.navigate('GoogleClassroomCoursesScreen')}>Google Sala de Aula</Text>
+            </View>
+          ) : null
+        }
       </View>
       <View style={styles.logoutContainer}>
         <TextButton text="Sair" backgroundColor={Colors.danger} onPress={logOut}></TextButton>
