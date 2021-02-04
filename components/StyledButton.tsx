@@ -9,13 +9,14 @@ type ButtonProps = {
   text: string;
   backgroundColor?: string;
   color?: string;
-  onPress?: () => void
+  onPress?: () => void;
+  width?: string|number;
 };
 
 export function TextButton(props: ButtonProps) {
   const styles = StyleSheet.create({
     button: {
-      width: "100%",
+      width: props.width ? props.width : "100%",
       height: 50,
       alignItems: "center",
       justifyContent: "center",

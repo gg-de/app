@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, AsyncStorage, useColorScheme } from 'react-native';
+import { StyleSheet, AsyncStorage, Image } from 'react-native';
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Agenda } from 'react-native-calendars';
 import Constants from "expo-constants";
@@ -7,6 +7,7 @@ import moment from "moment";
 
 import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
+import { TextButton } from '../components/StyledButton';
 
 
 export default function CalendarScreen() {
@@ -18,6 +19,7 @@ export default function CalendarScreen() {
 
   React.useEffect( () => {
     async function loadScheadule() {
+      // await AsyncStorage.removeItem('schedule');
       const dataString = await AsyncStorage.getItem('schedule')
       if (!dataString) return;
       const data = JSON.parse(dataString)
@@ -26,12 +28,12 @@ export default function CalendarScreen() {
       const start_week = moment().startOf('isoWeek')
       const weekdays = {
         monday: start_week.format(moment.HTML5_FMT.DATE),
-        tuesday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
-        wednesday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
-        thursday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
-        friday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
-        saturday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
-        sunday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
+        tuesday: start_week.add(1, 'days').format(moment.HTML5_FMT.DATE),
+        wednesday: start_week.add(1, 'days').format(moment.HTML5_FMT.DATE),
+        thursday: start_week.add(1, 'days').format(moment.HTML5_FMT.DATE),
+        friday: start_week.add(1, 'days').format(moment.HTML5_FMT.DATE),
+        saturday: start_week.add(1, 'days').format(moment.HTML5_FMT.DATE),
+        sunday: start_week.add(1, 'days').format(moment.HTML5_FMT.DATE),
       }
     
       const items ={
@@ -70,7 +72,22 @@ export default function CalendarScreen() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Bem Vindo ao GG-DE! O gerador de grades para desempenho educacional!</Text>
       </View>
-        <Text style={styles.text} onPress={() => navigation.navigate('RegisterSubjectScreen')}>Cadastrar novo cronograma</Text>
+      <Image
+        style={styles.logo}
+        source={require('../assets/images/logogg.png')}
+      />
+      <View style={styles.bottomCard}>
+        <Text style={styles.text}>Antes de começar vamos precisar cadastrar algumas informações</Text>
+        <View style={styles.buttonContainer}>
+          <TextButton
+            color={Colors.darkBlue}
+            backgroundColor={Colors.white}
+            width="50%"
+            text="Começar!"
+            onPress={() => navigation.navigate('RegisterSubjectScreen')}
+          />
+        </View>
+      </View>
     </View>
   ) : (
     <View style={styles.agendaContainer}><Agenda
@@ -107,14 +124,35 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '80%',
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 40
   },
   text: {
-    fontSize: 16
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingVertical: '10%',
+    paddingHorizontal: '5%'
+  },
+  bottomCard: {
+    position: 'absolute',
+    bottom: 0,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    height: '35%',
+    width: '100%',
+    backgroundColor: Colors.darkBlue,
+  },
+  buttonContainer: {
+    alignItems: 'flex-end',
+    backgroundColor: Colors.darkBlue,
+    paddingTop: '8%',
+    paddingRight: 20
   },
   eventContainer: {
     backgroundColor: 'white',
@@ -129,4 +167,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.black
   },
+  logo: {
+    width: 200,
+    height: 200
+  }
 });

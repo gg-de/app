@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AsyncStorage } from "react-native";
 import Toast from 'react-native-easy-toast';
@@ -91,6 +91,10 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Toast ref={(toast_) => toast = toast_} position="center" />
+      <Image
+        style={styles.logo}
+        source={require('../assets/images/logogg.png')}
+      />
       <TextInput
         style={styles.input}
         onChangeText={(text) => onChangeEmail(text)}
@@ -173,5 +177,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     width: 'auto'
+  },
+  logo: {
+    width: 200,
+    height: 200
   }
 });
