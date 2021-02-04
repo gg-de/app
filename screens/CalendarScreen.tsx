@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, AsyncStorage, useColorScheme } from 'react-native';
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import {Agenda} from 'react-native-calendars';
+import { Agenda } from 'react-native-calendars';
 import Constants from "expo-constants";
 import moment from "moment";
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
-import { colors } from 'react-native-elements';
 
 
 export default function CalendarScreen() {
@@ -21,43 +19,36 @@ export default function CalendarScreen() {
   React.useEffect( () => {
     async function loadScheadule() {
       const dataString = await AsyncStorage.getItem('schedule')
+      if (!dataString) return;
       const data = JSON.parse(dataString)
       setSchedule(data);
 
       const start_week = moment().startOf('isoWeek')
-      const monday = start_week.format(moment.HTML5_FMT.DATE)
-      const tuesday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
-      const wednesday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
-      const thursday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
-      const friday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
-      const saturday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
-    
-      const items ={
-        [monday]:[],
-        [tuesday]:[],
-        [wednesday]:[],
-        [thursday]:[],
-        [friday]:[],
-        [saturday]:[],
+      const weekdays = {
+        monday: start_week.format(moment.HTML5_FMT.DATE),
+        tuesday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
+        wednesday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
+        thursday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
+        friday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
+        saturday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
+        sunday: start_week.add('days', 1).format(moment.HTML5_FMT.DATE),
       }
     
-      data['monday'].forEach(element => {
-        items[monday].push({name: element['subject'], hour: element['time']});
-      });
-      data['tuesday'].forEach(element => {
-        items[tuesday].push({name: element['subject'], hour: element['time']});
-      });
-      data['wednesday'].forEach(element => {
-        items[wednesday].push({name: element['subject'], hour: element['time']});
-      });
-      data['thursday'].forEach(element => {
-        items[thursday].push({name: element['subject'], hour: element['time']});
-      });
-      data['friday'].forEach(element => {
-        items[friday].push({name: element['subject'], hour: element['time']});
-      });
-      data['saturday'].forEach(element => {
-        items[saturday].push({name: element['subject'], hour: element['time']});
+      const items ={
+        [weekdays.monday]:[],
+        [weekdays.tuesday]:[],
+        [weekdays.wednesday]:[],
+        [weekdays.thursday]:[],
+        [weekdays.friday]:[],
+        [weekdays.saturday]:[],
+        [weekdays.sunday]: []
+      }
+
+      const weekdaysList = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      weekdaysList.forEach((weekday) => {
+        data[weekday].forEach((elem: string) => {
+          if (elem['subject']) items[weekdays[weekday]].push({name: elem['subject'], hour: elem['time']});
+        });
       });
       setEvents(items)
       console.log(items)
@@ -66,21 +57,13 @@ export default function CalendarScreen() {
   }, [isFocused])
 
 
-  // const renderItem = (event) => {
-  //   return (
-  //     <View style={{
-  //       backgroundColor: 'white',
-  //           padding: 20,
-  //           marginTop: 20,
-  //           marginRight: 15,
-  //           borderRadius: 15,
-  //           alignItems: 'center',
-  //           flex: 1,
-  //       }}
-        
-          
-  //     ><Text style={styles.eventText}>{event.hour + ':00'}
-  //     </Text><Text style={styles.eventText}>{event.name}</Text></View>);}}
+    const renderEvent = (event) => (
+      <View style={styles.eventContainer}>
+        <Text style={styles.eventText}>{event.hour + ':00'}</Text>
+        <Text style={styles.eventText}>{event.name}</Text>
+      </View>
+    );
+
   return (
     schedule == null ? (
     <View style={styles.container}>
@@ -93,17 +76,7 @@ export default function CalendarScreen() {
     <View style={styles.agendaContainer}><Agenda
         items={events}
         // renderKnob={() => {return (<View style={{height: 80, backgroundColor: 'red'}}/>);}}
-        renderItem={(event) => {return (<View style={{
-            backgroundColor: 'white',
-            padding: 20,
-            marginTop: 20,
-            marginRight: 15,
-            borderRadius: 15,
-            alignItems: 'center',
-            flex: 1,
-        }}
-      ><Text style={styles.eventText}>{event.hour + ':00'}
-      </Text><Text style={styles.eventText}>{event.name}</Text></View>);}}
+        renderItem={renderEvent}
         // renderDay={(day, item) => {return (<View style={{height: 80, backgroundColor:'red'}}/>);}}
         // renderEmptyData={() => {return (<View style={{height:90, backgroundColor:Colors.primary}}/>);}}
         theme={{
@@ -143,8 +116,17 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16
   },
+  eventContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    marginTop: 20,
+    marginRight: 15,
+    borderRadius: 15,
+    alignItems: 'center',
+    flex: 1,
+  },
   eventText:{
     fontSize: 16,
     color: Colors.black
-  }
+  },
 });
