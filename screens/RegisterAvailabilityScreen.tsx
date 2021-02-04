@@ -95,7 +95,6 @@ export default function RegisterAvailabilityScreen() {
         navigation.navigate("CalendarScreen");
       })
       .catch((error) => {
-        console.warn("sdasfksakj")
         console.log(error)
       });
   };

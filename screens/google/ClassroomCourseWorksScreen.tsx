@@ -10,7 +10,7 @@ import { Text, View } from '../../components/Themed';
 import { TextButton } from '../../components/StyledButton';
 import Colors from '../../constants/Colors';
 import { getCourses, getCourseWorks } from '../../services/googleClassroom/courses.service';
-import { Course } from '../../models/googleClassroom/course.model';
+import { CourseWork } from '../../models/googleClassroom/course.model';
 import { refreshToken } from '../../services/googleOAuth2/token.service';
 import { GoogleClassroomCourseWorksScreenProps } from '../../types';
 
@@ -19,33 +19,43 @@ export default function ClassroomCourseWorksScreen({ route }: GoogleClassroomCou
   const navigation = useNavigation();
   let toast: Toast;
 
-  const [courses, setCourses] = React.useState<Course[]>([]);
+  const [courseWorks, setCourseWorks] = React.useState<CourseWork[]>([]);
 
   React.useEffect(() => {
     const loadCourseWorks = async () => {
       getCourseWorks(route.params.accessToken, route.params.courseId)
         .then((res) => {
-          setCourses(res.data.courses)
+          if (res.data.courseWork) {
+            setCourseWorks(res.data.courseWork)
+          }
         })
         .catch((error) => {
+          console.log(error);
           toast.show('Erro ao carregar cursos.', 4000);
         })
     };
     loadCourseWorks();
   }, []);
 
+  const getWorkDateTime = (courseWork: CourseWork) => {
+    return `${courseWork.dueDate.day}/${courseWork.dueDate.month}/${courseWork.dueDate.year} ${courseWork.dueTime.hours}:${courseWork.dueTime.minutes}`;
+  };
+
   return (
     <View style={styles.container}>
       <Toast ref={(toast_) => toast = toast_} position="center" />
-      <Text style={styles.title}>Atividades</Text>
       <View style={styles.cardsContainer}>
-        {courses.map((course, key) => {
+        {courseWorks.map((courseWork, key) => {
           return (
             <View style={styles.card} key={key}>
-              <Text style={styles.cardText}>{course.name}</Text>
+              <Text style={styles.cardTitle}>{courseWork.title}</Text>
+              <Text style={styles.cardText}>{courseWork.description}</Text>
+              <Text style={styles.cardText}>Data de Entrega: {getWorkDateTime(courseWork)}</Text>
             </View>
           )
         })}
+        {courseWorks.length == 0 &&
+         <Text style={styles.emptyText}>Esta turma não possui nenhuma atividade, pode ficar tranquilo :)</Text>}
       </View>
     </View>
   );
@@ -62,27 +72,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardsContainer: {
-    padding: '10%',
+    paddingHorizontal: '10%',
     width: '100%'
   },
   card: {
-    height: 60,
+    height: 'auto',
+    paddingVertical: 15,
     backgroundColor: Colors.white,
     borderRadius: 20,
     alignItems: 'center',
     paddingHorizontal: 20,
-    flexDirection: 'row',
-    marginVertical: 10
+    marginBottom: 20
   },
-  cardIcon: {
-    width: '10%',
-  },
-  cardText: {
+  cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: Colors.primary,
     paddingLeft: 15,
-    width: '90%',
+    marginBottom: 10,
+    textAlign: 'left'
+  },
+  cardText: {
+    fontSize: 16,
+    paddingLeft: 15,
+    paddingVertical: 2,
+    color: Colors.primary,
     textAlign: 'left'
   },
   logoutContainer: {
@@ -90,4 +104,8 @@ const styles = StyleSheet.create({
     bottom: 40,
     width: '40%',
   },
+  emptyText: {
+    fontSize: 18,
+    textAlign: 'center'
+  }
 });

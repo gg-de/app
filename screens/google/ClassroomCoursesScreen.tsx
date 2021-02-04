@@ -26,18 +26,28 @@ export default function ClassroomCoursesScreen() {
       const googleDataString = await AsyncStorage.getItem('googleData');
       if (googleDataString) {
         const googleData = JSON.parse(googleDataString);
-        refreshToken(googleData.refreshToken)
-          .then((res) => {
-            console.warn(res.data);
-          })
-        setAccessToken(googleData.accessToken);
-        // getCourses(googleData.accessToken)
+        console.log(googleData);
+        // refreshToken(googleData.refreshToken)
         //   .then((res) => {
-        //     setCourses(res.data.courses)
+        //     console.warn(res.data);
+        //     googleData.accessToken = res.data.access_token;
+        //     googleData.idToken = res.data.id_token;
+        //     console.log(googleData);
+        //     AsyncStorage.setItem('googleData', JSON.stringify(googleData));
         //   })
         //   .catch((error) => {
         //     toast.show('Erro ao carregar cursos.', 4000);
+        //     console.log(error);
         //   })
+        setAccessToken(googleData.accessToken);
+        getCourses(googleData.accessToken)
+          .then((res) => {
+            setCourses(res.data.courses);
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.show('Erro ao carregar cursos.', 4000);
+          })
       }
     };
     loadCourses();
@@ -46,16 +56,19 @@ export default function ClassroomCoursesScreen() {
   return (
     <View style={styles.container}>
       <Toast ref={(toast_) => toast = toast_} position="center" />
-      <Text style={styles.title}>Cursos</Text>
       <View style={styles.cardsContainer}>
         {courses.map((course, key) => {
           return (
-            <TouchableWithoutFeedback style={styles.card} key={key}
-              onPress={() => navigation.navigate('GoogleClassroomCourseWorksScreen', { params: { accessToken: accessToken, courseId: course.id } })}>
-              <Text style={styles.cardText}>{course.name}</Text>
-            </TouchableWithoutFeedback>
+            <View style={styles.card} key={key}>
+              <TouchableWithoutFeedback 
+                onPress={() => navigation.navigate('GoogleClassroomCourseWorksScreen', { accessToken: accessToken, courseId: course.id })}>
+                <Text style={styles.cardText}>{course.name}</Text>
+              </TouchableWithoutFeedback>
+            </View>
           )
         })}
+        {courses.length == 0 &&
+         <Text style={styles.emptyText}>Nenhuma turma encontrada</Text>}
       </View>
     </View>
   );
@@ -72,7 +85,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardsContainer: {
-    padding: '10%',
+    paddingHorizontal: '10%',
     width: '100%'
   },
   card: {
@@ -82,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     flexDirection: 'row',
-    marginVertical: 10
+    marginBottom: 20
   },
   cardIcon: {
     width: '10%',
@@ -100,4 +113,8 @@ const styles = StyleSheet.create({
     bottom: 40,
     width: '40%',
   },
+  emptyText: {
+    fontSize: 18,
+    textAlign: 'center'
+  }
 });

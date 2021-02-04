@@ -11,6 +11,6 @@ export const refreshToken = async (refreshToken: string) => {
   return oauth2Api.post("token", {
     client_id: ANDROID_CLIENT_ID,
     refresh_token: refreshToken,
-    grant_type: refreshToken
+    grant_type: 'refresh_token'
   });
 };

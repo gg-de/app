@@ -22,7 +22,7 @@ export type CalendarParamList = {
 export type SettingsParamList = {
   SettingsScreen: undefined;
   GoogleClassroomCoursesScreen: undefined;
-  GoogleClassroomCourseWorksScreen: { accessToken: string, courseId: string }
+  GoogleClassroomCourseWorksScreen: { accessToken: string, courseId: string };
 };
 
 type GoogleClassroomCourseWorksScreenRouteProp = RouteProp<SettingsParamList, 'GoogleClassroomCourseWorksScreen'>;

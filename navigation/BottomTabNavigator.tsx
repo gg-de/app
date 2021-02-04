@@ -110,11 +110,13 @@ function SettingsNavigator() {
       <SettingsStack.Screen
         name="GoogleClassroomCoursesScreen"
         component={ClassroomCoursesScreen}
+        options={headerConfig("Turmas")}
       />
       <SettingsStack.Screen
         name="GoogleClassroomCourseWorksScreen"
         component={ClassroomCourseWorksScreen}
         initialParams={{ accessToken: '', courseId: '' }}
+        options={headerConfig("Atividades")}
       />
     </SettingsStack.Navigator>
   );

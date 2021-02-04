@@ -23,7 +23,6 @@ export default function CalendarScreen() {
       const dataString = await AsyncStorage.getItem('schedule')
       const data = JSON.parse(dataString)
       setSchedule(data);
-      console.warn(data)
 
       const start_week = moment().startOf('isoWeek')
       const monday = start_week.format(moment.HTML5_FMT.DATE)
@@ -32,7 +31,6 @@ export default function CalendarScreen() {
       const thursday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
       const friday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
       const saturday = start_week.add('days', 1).format(moment.HTML5_FMT.DATE)
-      console.warn(saturday)
     
       const items ={
         [monday]:[],
